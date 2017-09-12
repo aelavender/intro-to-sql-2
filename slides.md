@@ -16,6 +16,8 @@ Separate slides with a blank line, then 3 hyphens, then another blank line, as i
 
 #### a.e. Lavender [@\_\_metaclass\_\_](https://twitter.com/__metaclass__)
 
+![GDI Circle Logo](./gdi/img/circle-gdi-logo.png "GDI Circle Logo")
+
 Based on original content by Vicki Boykis [@vboykis](https://twitter.com/vboykis)
 
 ---
@@ -283,6 +285,8 @@ SELECT COUNT(*) FROM stackoverflow.Posts;
 
 ## Stretch Break!
 
+![Cat Stretch!](./gdi/img/cat_stretch.jpg "Cat Stretch!")
+
 :note:
 
 After the stretch break, briefly mention the following:
@@ -442,6 +446,8 @@ WHERE Location LIKE 'Philadelphia%';
 ---
 
 ## Stretch Break!
+
+![Cat Stretch!](./gdi/img/cat_stretch.jpg "Cat Stretch!")
 
 ---
 
@@ -772,6 +778,12 @@ ORDER BY TotalScore DESC;
 
 ---
 
+## Stretch Break!
+
+![Cat Stretch!](./gdi/img/cat_stretch.jpg "Cat Stretch!")
+
+---
+
 ## Joins are cool! What else can we join?
 
 TODO: Insert schema diagram here
@@ -849,6 +861,7 @@ INNER JOIN stackoverflow.PostTypes AS pt
   ON q.PostTypeId = pt.Id
 INNER JOIN stackoverflow.PostTags
 WHERE pt.Name = 'Question'
+```
 
 --
 
@@ -927,7 +940,9 @@ ORDER BY cnt_accepted_answers desc;
 
 ---
 
-## STRETCH BREAK!
+## Stretch Break!
+
+![Cat Stretch!](./gdi/img/cat_stretch.jpg "Cat Stretch!")
 
 :note:
 
@@ -1028,6 +1043,12 @@ LEFT OUTER JOIN stackoverflow.Posts AS p
 WHERE p.Id is NULL;
 ```
 <!-- .element: class="fragment" -->
+
+---
+
+## Stretch Break!
+
+![Cat Stretch!](./gdi/img/cat_stretch.jpg "Cat Stretch!")
 
 ---
 
