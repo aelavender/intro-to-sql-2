@@ -12,8 +12,12 @@
     border-width: 0;
 }
 
+/* Make code a bit bigger */
 .reveal pre {
     font-size: 0.75em;
+}
+.reveal pre code {
+    max-height: 500px;
 }
 
 /* Images should not have borders */
