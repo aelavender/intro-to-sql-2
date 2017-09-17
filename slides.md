@@ -166,11 +166,11 @@ Some rules:
 Example of SQL Select statement:
 
 ```sql
-SELECT UserName, SUM(PurchaseAmount) as Total
+SELECT UserName, SUM(PurchaseAmount) AS Total
 FROM billing_database.purchases
 WHERE PurchaseDate >= '2017-01-01'
   AND ProductCategory = 'books'
-  AND UserName like 'Alice%'
+  AND UserName LIKE 'Alice%'
 GROUP BY UserName
 HAVING Total > 50.00
 ORDER BY Total DESC
@@ -183,7 +183,7 @@ What do you think this statement does?
 
 ## The Select Statement
 
-#### Use these words, in this order:
+#### Use these keywords, in this order:
 
 - `SELECT`: What data (columns) do you want? (required)
 - `FROM`: Which table(s) do you want it from? (required)
