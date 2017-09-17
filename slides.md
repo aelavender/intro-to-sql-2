@@ -48,7 +48,9 @@ Some rules:
 ## About me
 - Software architect / data engineer at [Monetate](http://www.monetate.com) (We're hiring!)
 - 10 years of experience with SQL
-- Favourite movie is Princess Mononoke. I've seen it about 8 times.
+- Favourite movie is _Princess Mononoke_. I've seen it about 8 times.
+
+![Princess Mononoke](./img/princess_mononoke.gif "Princess Mononoke")
 
 ---
 
@@ -100,7 +102,7 @@ Some rules:
   - Data is stored in tables
   - Tables have well-defined relationships between them
 - The most common type of database today; when people just say "database," they almost always mean "relational database."
-- Examples: Oracle, MS SQL Server, MySQL, Postgres, SQLite
+- Examples: Oracle, Microsoft SQL Server, MySQL, Postgres, SQLite
 
 ---
 
@@ -135,6 +137,8 @@ Some rules:
 | Column   | Column    |
 | Value    | Cell      |
 
+![Russian Nesting Dolls](./img/small-nested-dolls.png "Russian Nesting Dolls")
+
 ---
 
 ## Differences from Excel
@@ -149,9 +153,9 @@ Some rules:
 ---
 
 ## What's SQL?
-- Stands for Structured Query Language
+- Stands for _Structured Query Language_
 - How to ask ("Query") a database for information
-- A "declarative" language: ask for what you want; the database figures out how to get it.
+- A _declarative_ language: ask for what you want; the database figures out how to get it.
 - Nobody pronounces it correctly
 - Each database system uses a slightly different "flavour" of SQL
 
@@ -208,8 +212,8 @@ This is **real data** from [Stack Overflow](https://data.stackexchange.com)!
 - Questions can be *Tagged* with categories
 - Users can *Vote* on both questions and answers
   - The number of *UpVotes* and *DownVotes* result in a question or answer's *Score*
-  - The person who asked the question can choose which answer to *Accept* as the best answer to the question
-  - Users gain *Reputation* for getting UpVoted and for getting their answer accepted
+- The person who asked the question can choose which answer to *Accept* as the best answer
+- Users gain *Reputation* for getting UpVoted and for getting their answer accepted
 
 
 ---
@@ -222,12 +226,16 @@ SELECT * FROM stackoverflow.Users;
 
 :note:
 
+At this point, switch to Workbench and do it interactively.
+
+What does this mean?
+ - `SELECT *` means "give me everything"
+ - `FROM stackoverflow.Users` is where it's from.  Use a two-part name: the schema name and the table name.
+
 Is SQL case sensitive?  It depends on what kinda SQL.
   - Keywords are usually NOT case sensitive
   - Table and column names usually ARE case sensitive
   - Data can go either way...
-
-At this point, switch to Workbench and do it interactively.
 
 ---
 
@@ -451,7 +459,19 @@ WHERE Location LIKE 'Philadelphia%';
 <!-- .element: class="fragment" data-fragment-index="1"-->
 
 
-<!-- .element: class="fragment"-->`LIKE` is a pattern-matching operator.  The `%` character is a wildcard and can go anywhere in the pattern.
+<!-- .element: class="fragment"-->`LIKE` is a pattern-matching operator.  The `%` character is a wildcard character -- it matches anything.
+
+---
+
+## More with `LIKE`
+
+Which users have "sql" in their name?
+
+```sql
+SELECT * FROM stackoverflow.Users
+WHERE DisplayName LIKE '%sql%';
+```
+<!-- .element: class="fragment" data-fragment-index="1"-->
 
 ---
 
