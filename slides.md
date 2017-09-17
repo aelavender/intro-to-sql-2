@@ -668,7 +668,7 @@ Names in common -- ID is a primary key and therefore unique. DisplayName is NOT 
 
 ---
 
-## LUNCH!
+![Lunch Break!](./img/lunch-break.png "Keep Calm and Take A Lunch Break")
 
 ---
 
@@ -1045,7 +1045,8 @@ HAVING COUNT(*) = 1;
 
 ---
 
-## OUTER JOIN: What if there are no matches?
+## OUTER JOIN:
+#### What if there are no matches?
 
 How many questions have no answers yet?  Perhaps you'd like to answer one!
 
@@ -1082,7 +1083,7 @@ How many tags does each post have?
 SELECT p.Id AS post_id,
   COUNT(pt.Id) AS tag_count
 FROM stackoverflow.Posts p
-LEFT JOIN stackoverflow.PostTags pt
+LEFT OUTER JOIN stackoverflow.PostTags pt
   ON p.Id = pt.PostId
 GROUP BY p.Id;
 ```
@@ -1114,13 +1115,16 @@ The second one is complicated and takes some lateral thinking.  Motivate it as f
 
 ---
 
-## Subqueries: Queries Within Queries
+## Subqueries
+#### Queries Within Queries
+
+![Yo Dawg](./img/yo-dawg.png "Yo Dawg I heard you like SQL")
 
 *Note*: This is also an advanced topic.
 
-Let's say I want to look at user participation by making a _histogram_ of user posts: i.e. how many users have made zero posts; how many have made one post; how many have made two posts, etc.
-
 --
+
+Let's say I want to look at user participation by making a _histogram_ of user posts -- How many users have made zero posts; how many have made one post; how many have made two posts, etc.
 
 ```sql
 SELECT
@@ -1137,15 +1141,15 @@ FROM (
 GROUP BY user_post_count
 ORDER BY user_post_count;
 ```
-
-OK, say I actually want NEW user engagement.  Same answer as above, but show me for users who joined this year.
 <!-- .element: class="fragment" -->
 
 :note:
 
 Work through the example before showing the answer.  Start by solving the "inner" problem: how many posts does each user have?  Many students probably came across the answer when trying to solve to previous problem, but didn't know how to get the COUNT.  Subqueries to the rescue!
 
-For the follow-up question: The `WHERE CreationDate >= '2017-01-01'` needs to go in the inside query.  Putting it in the outside query doesn't work -- creationdate isn't availble to the outside.
+Follow-up question: Say I actually want NEW user engagement.  Same answer as above, but show me for users who joined this year.
+
+The `WHERE CreationDate >= '2017-01-01'` needs to go in the inside query.  Putting it in the outside query doesn't work -- creationdate isn't availble to the outside.
 
 ---
 
