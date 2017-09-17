@@ -83,13 +83,13 @@ Some rules:
 ## Plan for the day
 - Getting data out of a database (continued):
   - Joining multiple tables together: `JOIN`
+  - Filtering after grouping: `HAVING`
   - Sub-queries
 - Updating data in a database:
   - Adding a row to a table: `INSERT`
   - Modifying rows: `UPDATE`
   - Removing rows: `DELETE`
 - Updating the structure of the database itself
-  - Data types
   - Creating tables
 - Big Data, NoSQL, and alternative models
 
@@ -193,21 +193,23 @@ What do you think this statement does?
 
 ## Let's get connected!
 
-TODO Add connection info and image here
+:note:
+
+Walk through connecting via MySQL Workbench.  This may take a while.
 
 ---
 
 ## About our data
 
-This is _real data_ from [Stack Overflow](https://data.stackexchange.com)!
+This is **real data** from [Stack Overflow](https://data.stackexchange.com)!
 
 - Stack Overflow is a Q&A website.
-- Users can create post questions and answers to those questions
-- Questions can be tagged with categories
-- Users can vote on both questions and answers
-  - The number of Upvotes and Downvotes result in a question or answer's "score"
-  - The person who asked the question can choose which response best answered the question
-  - Users gain "reputation" for getting upvoted and for getting their answer accepted
+- *Users* can create post *Questions*, and other users can respond with *Answers*
+- Questions can be *Tagged* with categories
+- Users can *Vote* on both questions and answers
+  - The number of *UpVotes* and *DownVotes* result in a question or answer's *Score*
+  - The person who asked the question can choose which answer to *Accept* as the best answer to the question
+  - Users gain *Reputation* for getting UpVoted and for getting their answer accepted
 
 
 ---
@@ -398,12 +400,20 @@ WHERE AboutMe IS NULL;
 -- More downvotes than upvotes:
 SELECT * FROM stackoverflow.Users
 WHERE DownVotes > UpVotes;
+```
 
+--
+
+```sql
 -- High reputation and many views:
 SELECT * FROM stackoverflow.Users
 WHERE Reputation >= 1000
 AND Viewed >= 100;
+```
 
+--
+
+```
 -- A set of specific ID numbers
 SELECT * FROM stackoverflow.Users
 WHERE Id IN (45194, 99717, 108803)
@@ -488,7 +498,11 @@ SELECT * FROM stackoverflow.Users
 WHERE Location like 'Philadelphia%'
 ORDER BY CreationDate DESC
 LIMIT 10;
+```
 
+--
+
+```
 -- 10 youngest
 SELECT * FROM stackoverflow.Users
 WHERE Age IS NOT NULL
@@ -520,7 +534,10 @@ If you give it a column name, it can do even more:
 
 ```sql
 SELECT COUNT(Location) FROM stackoverflow.Users;
+```
+<!-- .element: class="fragment" -->
 
+```sql
 SELECT COUNT(DISTINCT Location)
 FROM stackoverflow.Users;
 ```
@@ -637,7 +654,7 @@ Names in common -- ID is a primary key and therefore unique. DisplayName is NOT 
 
 ## Joins
 
-Let's take a peak at the Comments table.
+Let's take a peak at the `Comments` table.
 
 ```sql
 SELECT * FROM stackoverflow.Comments limit 10;
@@ -784,12 +801,15 @@ ORDER BY TotalScore DESC;
 
 ---
 
-## Joins are cool! What else can we join?
+## Joins are cool!
+#### What else can we join?
 
-TODO: Insert schema diagram here
+![Entity Relationship Diagram for stackoverflow schema](./img/stackoverflow_erd.svg "Entity Relationship Diagram for stackoverflow schema")
+<!-- .element: style="width: 700px" -->
 
 :note:
 
+- This is called an Entity Relationship Diagram (ERD)
 - The arrows represent foreign key relations -- where a column in one table references the id of another table.
 - In this schema, Primary Keys are always called 'ID'. This is a convention (and a very common one) but it won't always be the case.
 - Whats with the 'Types' tables?
@@ -831,7 +851,7 @@ WHERE pt.name = 'Question'
 GROUP BY u.Id
 ORDER BY cnt DESC
 ```
-How do I change this to get users who have answered the most questions?
+How do I change this to get users who have _answered_ the most questions?
 
 --
 
@@ -948,8 +968,6 @@ ORDER BY cnt_accepted_answers desc;
 
 Leave an hour for insert/update/delete, summary, and wrap-up. Omit or shorten sections on subqueries, outer joins, and HAVING if necessary to make sure students understand inner joins.
 
-TODO: Sub-queries
-
 TODO: Start writing Intermediate SQL course :-)
 
 ---
@@ -1011,7 +1029,6 @@ HAVING COUNT(*) = 1;
 
 How many questions have no answers yet?  Perhaps you'd like to answer one!
 
-Note: This is an advanced topic. Don't worry if you don't understand it yet!
 ```sql
 SELECT q.Id, q.Title
 FROM stackoverflow.Posts AS q
@@ -1025,24 +1042,90 @@ HAVING COUNT(a.Id) = 0;
 ```
 <!-- .element: class="fragment" -->
 
+Note: This is an advanced topic. Don't worry if you don't understand it yet!
+<!-- .element: class="fragment" -->
+
 :note:
 
 Start with answer to previous question. Why doesn't it work to just change `HAVING COUNT(*) = 1` to `= 0`?
 
 ---
 
-Try these!
-
+#### Try these!
+- How many tags does each post have?
 - How many users have not made a post yet?
 
+--
+
+How many tags does each post have?
 ```sql
-SELECT count(*)
+SELECT p.Id AS post_id,
+  COUNT(pt.Id) AS tag_count
+FROM stackoverflow.Posts p
+LEFT JOIN stackoverflow.PostTags pt
+  ON p.Id = pt.PostId
+GROUP BY p.Id;
+```
+
+--
+
+How many users have not made a post yet?
+```sql
+SELECT COUNT(*)
 FROM stackoverflow.Users AS u
 LEFT OUTER JOIN stackoverflow.Posts AS p
    ON u.Id = p.OwnerUserId
 WHERE p.Id is NULL;
 ```
+
+:note:
+
+The second one is complicated and takes some lateral thinking.  Motivate it as follows:
+- We know how to list all users:
+  `SELECT * FROM users;`
+- Now let's join in posts:
+  `SELECT * FROM users INNER JOIN posts ON u.Id = p.OwnerUserId;`
+- But we know that inner join will filter out users who have not made any posts (which happens to be exactly who we want to see).  So let's change to left join instead:
+  `SELECT * FROM users LEFT JOIN posts ON u.Id = p.OwnerUserId;`
+- How do users who have no posts appear in the above result?  They have all NULLs for the post.  So we can use a WHERE to filter them out.
+  `SELECT * FROM users LEFT JOIN posts ON u.Id = p.OwnerUserId WHERE p.Id IS NLLL;`
+- Cool, now we've just got a list of users who have made no posts.  I wanted a count, so change to COUNT(*)
+  `SELECT COUNT(*) FROM users LEFT JOIN posts ON u.Id = p.OwnerUserId WHERE p.Id IS NLLL;`
+
+---
+
+## Subqueries: Queries Within Queries
+
+*Note*: This is also an advanced topic.
+
+Let's say I want to look at user participation by making a _histogram_ of user posts: i.e. how many users have made zero posts; how many have made one post; how many have made two posts, etc.
+
+--
+
+```sql
+SELECT
+  user_post_count,
+  COUNT(*) AS number_of_users
+FROM (
+    SELECT u.Id as user_id,
+      COUNT(p.Id) as user_post_count
+    FROM stackoverflow.Users AS u
+    LEFT OUTER JOIN stackoverflow.Posts AS p
+       ON u.Id = p.OwnerUserId
+    GROUP BY u.Id
+) AS t
+GROUP BY user_post_count
+ORDER BY user_post_count;
+```
+
+OK, say I actually want NEW user engagement.  Same answer as above, but show me for users who joined this year.
 <!-- .element: class="fragment" -->
+
+:note:
+
+Work through the example before showing the answer.  Start by solving the "inner" problem: how many posts does each user have?  Many students probably came across the answer when trying to solve to previous problem, but didn't know how to get the COUNT.  Subqueries to the rescue!
+
+For the follow-up question: The `WHERE CreationDate >= '2017-01-01'` needs to go in the inside query.  Putting it in the outside query doesn't work -- creationdate isn't availble to the outside.
 
 ---
 
@@ -1083,18 +1166,26 @@ select * from gdi.Students;
 
 ```sql
 INSERT INTO gdi.Students
-  (Name, ClassesTaken, FavouriteMovie, TimesSeen)
+  (Name, GdiClassesTaken, FavoriteMovie, TimesSeen)
 VALUES
   ('Lavender', 6, 'Princess Mononoke', 8);
 ```
 <!-- .element: class="fragment" -->
 
 :note:
+
 Have student's insert their own data, then select to verify that it made it in there.
 
 How did ID get there? It's an "auto-incrementing primary key"
 
 Have each student figure out what their id number is.
+
+---
+
+#### We can `SELECT` on our `Students` table just like any other
+- How many students do we have today?
+- How many students have the same first name as you? (Go say hi to them!)
+- Who has watched their favourite movie more than 3 times?
 
 ---
 
@@ -1166,15 +1257,31 @@ DELETE FROM gdi.Students;
 ## How did the _table_ get there in the first place?
 
 ```sql
-SHOW CREATE TABLE gdi.Students;
+CREATE TABLE gdi.Students (
+  Id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  Name VARCHAR(255) DEFAULT NULL,
+  GdiClassesTaken INTEGER DEFAULT NULL,
+  FavoriteMovie VARCHAR(255) DEFAULT NULL,
+  TimesSeen INTEGER DEFAULT NULL
+);
 ```
 
 :note:
 
-This shows the CREATE TABLE statement that was used to create the table.
-I can't run it again, since a table with that name already exists, but I can create a _new_ table just like it.
+What do the various data types mean?  Discuss Primary Key, Auto Increment
 
-What do the various data types mean?
+Fun open-ended exercise/discussion (if there's time): Say that GDI were a University. You work for the dean of GDI U and you need to track who has taken which classes so that you know when they are ready to graduate.  What tables would you need?  Draw out your Entity Relationship Diagram.  Think about what information the dean might ask you and what queries you'll have to write to get those answers.
+
+Have students do this in small groups.
+
+Sample answer:
+
+Users (Id, Name)
+Classes (Id, Name, Description)
+ClassPrerequisites (Id, ClassId, PrerequisiteClassId)
+Events (Id, ClassId FK, Date, Location, Price)
+EventParticipants (Id, ClassId, ParticipantUserId, ParticipantTypeId, Grade) -- Grade non null for students only
+ParticipantTypes (Id, Name) -- Name={Student, TA, Teacher}
 
 ---
 
@@ -1249,10 +1356,17 @@ What do the various data types mean?
 #### Here's what we learned!
 
 - Getting data out of your tables with `SELECT`
-  - Counting rows; filtering; ordering
-  - Grouping and aggregating
-  - Joining tables together
-- Modifying your data with `INSERT`, `UPDATE`, and `DELETE`
+  - Counting rows with `COUNT`
+  - filtering with `WHERE`
+  - ordering with `ORDER BY`
+  - Grouping with `GROUP BY`
+  - Aggregating with `MIN`, `MAX`, `AVG`
+  - Combining tables with various types of `JOIN`
+  - Subqueries: queries within queries
+- Adding data with `INSERT`
+- Modifying existing data with `UPDATE`
+- Getting rid of data with `DELETE`
+- Creating new tables with `CREATE TABLE`
 
 ---
 
@@ -1262,4 +1376,23 @@ What do the various data types mean?
 - Structuring your data efficiently (Sondra's Database Design class)
 - Modifying data safely: Transactions, constraints, ACID compliance
 - Saving and sharing your SQL: Views, Triggers, and Stored Procedures
-- Combining SQL with other programming languages
+- Combining SQL with other programming languages (Object Relational Mappings)
+
+---
+
+## Resources
+- GDI Philly's Slack has a `#sql` channel!
+- [dba.stackexchange.com](https://dba.stackexchange.com) -- The Q&A site that we got data from
+- [Head First SQL](https://www.amazon.com/Head-First-SQL-Brain-Learners/dp/0596526849/) Good visual book
+- [Learn SQL The Hard Way](http://sql.learncodethehardway.org/d-Way.html) Not as hard as it sounds
+- [DataPhilly Meetup](https://www.meetup.com/DataPhilly/)
+
+---
+
+## Thanks for coming!
+
+.
+
+anna.e.lavender@gmail.com
+
+Twitter: @\_\_metaclass\_\_
