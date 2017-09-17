@@ -183,7 +183,7 @@ What do you think this statement does?
 
 ## The Select Statement
 
-##### Use these words, in this order:
+#### Use these words, in this order:
 
 - `SELECT`: What data (columns) do you want? (required)
 - `FROM`: Which table(s) do you want it from? (required)
@@ -329,7 +329,7 @@ WHERE Reputation >= 1000;
 
 --
 
-#### Get all users under the age of 30
+Get all users under the age of 30
 ```sql
 SELECT * FROM stackoverflow.Users
 WHERE Age < 30;
@@ -337,7 +337,7 @@ WHERE Age < 30;
 
 --
 
-##### What's user `dba4life`'s website?
+What's user `dba4life`'s website?
 ```sql
 SELECT WebsiteUrl
 FROM stackoverflow.Users
@@ -347,7 +347,7 @@ Note that strings must be `'quoted like this'`
 
 --
 
-##### Get the names of users who are from Philly
+Get the names of users who are from Philly
 ```sql
 SELECT DisplayName FROM stackoverflow.Users
 WHERE Location = 'Philadelphia, PA';
@@ -355,8 +355,7 @@ WHERE Location = 'Philadelphia, PA';
 
 --
 
-##### Get the ID numbers and creation dates of all users who joined the site since January 1, 2017
-
+Get the ID numbers and creation dates of all users who joined the site since January 1, 2017
 ```sql
 SELECT Id, CreationDate
 FROM stackoverflow.Users
@@ -367,13 +366,16 @@ Dates need to be quoted and formatted like this: `'2017-01-01'`
 
 --
 
-##### How many users have reputation of at least 1000?
+#### How many users have reputation of at least 1000?
+
 ```sql
 SELECT COUNT(*)
 FROM stackoverflow.Users
 WHERE Reputation > 1000;
 ```
-##### At least 5000?
+
+#### At least 5000?
+
 ```sql
 SELECT COUNT(*)
 FROM stackoverflow.Users
@@ -471,7 +473,9 @@ Which users have "sql" in their name?
 SELECT * FROM stackoverflow.Users
 WHERE DisplayName LIKE '%sql%';
 ```
-<!-- .element: class="fragment" data-fragment-index="1"-->
+<!-- .element: class="fragment"-->
+
+<!-- .element: class="fragment"-->The `%` can go anywhere in the string, and you can have more than one of them.
 
 ---
 
@@ -574,7 +578,7 @@ FROM stackoverflow.Users;
 
 ---
 
-##### There are more aggregation functions:
+#### There are more aggregation functions:
 
 Minumum, Maximum, Sum, Average
 
@@ -614,7 +618,7 @@ GROUP BY Location;
 
 ---
 
-##### Try these:
+#### Try these:
 - How many users under 30 are in each location?
 - Which locations have the highest average reputation?
 - Do any users have the same Display Name? Do any have the same ID?
@@ -690,7 +694,7 @@ Wouldn't it be nice if we could combine them?
 
 ---
 
-##### Our First Join:  Comments with Users
+#### Our First Join:  Comments with Users
 ```sql
 SELECT *
 FROM stackoverflow.Comments AS c
